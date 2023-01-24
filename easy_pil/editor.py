@@ -9,7 +9,6 @@ from typing_extensions import Literal
 from .canvas import Canvas
 from .font import Font
 from .text import Text
-from .color import Color
 
 
 class Editor:
@@ -96,8 +95,7 @@ class Editor:
         mask = Image.new("RGBA", size=self.image.size, color=(255, 255, 255, 0))
         mask_draw = ImageDraw.Draw(mask)
         mask_draw.rounded_rectangle(
-            (offset, offset)
-            + (self.image.size[0] - offset, self.image.size[1] - offset),
+            (offset, offset) + (self.image.size[0] - offset, self.image.size[1] - offset),
             radius=radius,
             fill="black",
         )
@@ -112,8 +110,7 @@ class Editor:
         holder = Image.new("RGBA", size=self.image.size, color=(255, 255, 255, 0))
         mask = Image.new("RGBA", size=self.image.size, color=(255, 255, 255, 0))
         mask_draw = ImageDraw.Draw(mask)
-        ellipse_size = tuple(i-1 for i in self.image.size)
-        mask_draw.ellipse((0, 0) + ellipse_size, fill="black")
+        mask_draw.ellipse((0, 0) + self.image.size, fill="black")
         holder.paste(self.image, (0, 0))
         self.image = Image.composite(holder, background, mask)
 
@@ -208,7 +205,7 @@ class Editor:
         position: Tuple[float, float],
         text: str,
         font: Union[ImageFont.FreeTypeFont, Font] = None,
-        color: Color = "black",
+        color: Union[Tuple[int, int, int], str, int] = "black",
         align: Literal["left", "center", "right"] = "left",
     ) -> Editor:
         """Draw text into image
@@ -221,7 +218,7 @@ class Editor:
             Text to draw
         font : Union[ImageFont.FreeTypeFont, Font], optional
             Font used for text, by default None
-        color : Color, optional
+        color : Union[Tuple[int, int, int], str, int], optional
             Color of the font, by default "black"
         align : Literal["left", "center", "right"], optional
             Align text, by default "left"
@@ -236,7 +233,7 @@ class Editor:
 
         return self
 
-    def multi_text(
+    def multicolor_text(
         self,
         position: Tuple[float, float],
         texts: List[Text],
@@ -290,7 +287,7 @@ class Editor:
             else:
                 width, _ = font.getsize(sentence)
 
-            draw.text(position, sentence, color, font=font, anchor="lm")
+            draw.text(position, sentence, color, font=font)
             position = (position[0] + width, position[1])
 
         return self
@@ -300,9 +297,9 @@ class Editor:
         position: Tuple[float, float],
         width: float,
         height: float,
-        fill: Color = None,
-        color: Color = None,
-        outline: Color = None,
+        fill: Union[str, int, Tuple[int, int, int]] = None,
+        color: Union[str, int, Tuple[int, int, int]] = None,
+        outline: Union[str, int, Tuple[int, int, int]] = None,
         stroke_width: float = 1,
         radius: int = 0,
     ) -> Editor:
@@ -316,11 +313,11 @@ class Editor:
             Width of rectangle
         height : float
             Height of rectangle
-        fill : Color, optional
+        fill : Union[str, int, Tuple[int, int, int]], optional
             Fill color, by default None
-        color : Color, optional
+        color : Union[str, int, Tuple[int, int, int]], optional
             Alias of fill, by default None
-        outline : Color, optional
+        outline : Union[str, int, Tuple[int, int, int]], optional
             Outline color, by default None
         stroke_width : float, optional
             Stroke width, by default 1
@@ -359,9 +356,9 @@ class Editor:
         max_width: Union[int, float],
         height: Union[int, float],
         percentage: int = 1,
-        fill: Color = None,
-        color: Color = None,
-        outline: Color = None,
+        fill: Union[str, int, Tuple[int, int, int]] = None,
+        color: Union[str, int, Tuple[int, int, int]] = None,
+        outline: Union[str, int, Tuple[int, int, int]] = None,
         stroke_width: float = 1,
         radius: int = 0,
     ) -> Editor:
@@ -377,11 +374,11 @@ class Editor:
             Height of the bar
         percentage : int, optional
             Percebtage to fill of the bar, by default 1
-        fill : Color, optional
+        fill : Union[str, int, Tuple[int, int, int]], optional
             Fill color, by default None
-        color : Color, optional
+        color : Union[str, int, Tuple[int, int, int]], optional
             Alias of fill, by default None
-        outline : Color, optional
+        outline : Union[str, int, Tuple[int, int, int]], optional
             Outline color, by default None
         stroke_width : float, optional
             Stroke width, by default 1
@@ -422,8 +419,8 @@ class Editor:
         width: Union[int, float],
         height: Union[int, float],
         percentage: float,
-        fill: Color = None,
-        color: Color = None,
+        fill: Union[str, int, Tuple[int, int, int]] = None,
+        color: Union[str, int, Tuple[int, int, int]] = None,
         stroke_width: float = 1,
     ) -> Editor:
         """Draw a rounded bar
@@ -438,9 +435,9 @@ class Editor:
             Height of the bar
         percentage : float
             Percentage to fill
-        fill : Color, optional
+        fill : Union[str, int, Tuple[int, int, int]], optional
             Fill color, by default None
-        color : Color, optional
+        color : Union[str, int, Tuple[int, int, int]], optional
             Alias of color, by default None
         stroke_width : float, optional
             Stroke width, by default 1
@@ -468,9 +465,9 @@ class Editor:
         position: Tuple[float, float],
         width: float,
         height: float,
-        fill: Color = None,
-        color: Color = None,
-        outline: Color = None,
+        fill: Union[str, int, Tuple[int, int, int]] = None,
+        color: Union[str, int, Tuple[int, int, int]] = None,
+        outline: Union[str, int, Tuple[int, int, int]] = None,
         stroke_width: float = 1,
     ) -> Editor:
         """Draw an ellipse
@@ -483,11 +480,11 @@ class Editor:
             Width of ellipse
         height : float
             Height of ellipse
-        fill : Color, optional
+        fill : Union[str, int, Tuple[int, int, int]], optional
             Fill color, by default None
-        color : Color, optional
+        color : Union[str, int, Tuple[int, int, int]], optional
             Alias of fill, by default None
-        outline : Color, optional
+        outline : Union[str, int, Tuple[int, int, int]], optional
             Outline color, by default None
         stroke_width : float, optional
             Stroke width, by default 1
@@ -511,9 +508,9 @@ class Editor:
     def polygon(
         self,
         cordinates: list,
-        fill: Color = None,
-        color: Color = None,
-        outline: Color = None,
+        fill: Union[str, int, Tuple[int, int, int]] = None,
+        color: Union[str, int, Tuple[int, int, int]] = None,
+        outline: Union[str, int, Tuple[int, int, int]] = None,
     ) -> Editor:
         """Draw a polygon
 
@@ -521,11 +518,11 @@ class Editor:
         ----------
         cordinates : list
             Cordinates to draw
-        fill : Color, optional
+        fill : Union[str, int, Tuple[int, int, int]], optional
             Fill color, by default None
-        color : Color, optional
+        color : Union[str, int, Tuple[int, int, int]], optional
             Alias of fill, by default None
-        outline : Color, optional
+        outline : Union[str, int, Tuple[int, int, int]], optional
             Outline color, by default None
         """
         if color:
@@ -543,8 +540,8 @@ class Editor:
         height: float,
         start: float,
         rotation: float,
-        fill: Color = None,
-        color: Color = None,
+        fill: Union[str, int, Tuple[int, int, int]] = None,
+        color: Union[str, int, Tuple[int, int, int]] = None,
         stroke_width: float = 1,
     ) -> Editor:
         """Draw arc
@@ -561,9 +558,9 @@ class Editor:
             Start position of arch
         rotation : float
             Rotation in degre
-        fill : Color, optional
+        fill : Union[str, int, Tuple[int, int, int]], optional
             Fill color, by default None
-        color : Color, optional
+        color : Union[str, int, Tuple[int, int, int]], optional
             Alias of fill, by default None
         stroke_width : float, optional
             Stroke width, by default 1
